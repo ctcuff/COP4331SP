@@ -1,0 +1,21 @@
+.create-account {
+  margin-top: 3em;
+  padding: 0 5%;
+  width: 500px;
+}
+
+.sign-in-message {
+  font-weight: 500;
+  font-size: 0.9em;
+  margin: 2em 0;
+}
+
+@media screen and (max-width: 550px) {
+  .create-account {
+    width: 100%;
+  }
+
+  .logo {
+    font-size: 0.9em;
+  }
+}

@@ -1,0 +1,48 @@
+
+.header
+{
+    background-color: red;
+    width: 225px;
+    margin-top: 15px;
+}
+
+.header p
+{
+    font-size: 20px;
+    font-family: arial;
+}
+
+.table
+{
+    background-color: white;
+    width: 700px;
+    height: 600px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.buttons
+{
+    margin: 0 auto;
+    width: 285px;
+    margin-top: 20px;
+    background-color: blue;
+}
+
+
+.btn-add
+{
+    margin-left: 30px;
+}
+
+.btn-delete
+{
+    margin-left: 30px;
+}
+
+.btn-update
+{
+    margin-left: 30px;
+}

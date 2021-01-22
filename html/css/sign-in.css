@@ -1,0 +1,17 @@
+.login {
+  margin-top: 4em;
+  padding: 0 5%;
+  width: 450px;
+}
+
+.sign-up-message {
+  font-weight: 500;
+  font-size: 0.9em;
+  margin: 2em 0;
+}
+
+@media screen and (max-width: 500px) {
+  .login {
+    width: 100%;
+  }
+}

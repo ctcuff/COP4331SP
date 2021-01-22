@@ -1,0 +1,127 @@
+/* Contains styles shared by the sign-in and create-account pages */
+h1 {
+  font-weight: 800;
+  width: 100%;
+}
+
+label {
+  text-transform: uppercase;
+  font-weight: 600;
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 0.6em;
+}
+
+input {
+  padding: 1em;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1em;
+  box-shadow: 0 2px 10px var(--color-shadow);
+  margin-bottom: 1em;
+  /* Allows box shadow to appear in Safari */
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input:focus {
+  outline: 1px solid var(--color-primary);
+}
+
+.logo {
+  position: absolute;
+  text-decoration: none;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  top: 1em;
+  left: 1em;
+  font-weight: 700;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-submit {
+  background-color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 1em;
+  padding: 1em;
+  color: var(--color-light);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 1.5em;
+}
+
+.btn-submit:focus {
+  outline: 1px solid blue;
+}
+
+.error-message {
+  display: none;
+  margin: 1em 0 3em 0;
+  flex-direction: row;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  background-color: var(--color-error-bg);
+  align-items: center;
+  animation: slide-up 0.5s ease-in-out;
+  position: relative;
+}
+
+.error-message-content {
+  padding: 1em 3em 1em 0;
+}
+
+.error-message-close-btn {
+  position: absolute;
+  border: none;
+  background-color: transparent;
+  right: 4px;
+  top: 4px;
+  font-size: 1.5em;
+  color: var(--color-error);
+  cursor: pointer;
+}
+
+.error-message-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.error-message-body {
+  margin: 0;
+  margin-top: 0.5em;
+  font-size: 0.9em;
+}
+
+.error-message-icon {
+  height: 25px;
+  margin: 1em 0.8em;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(25%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .logo {
+    font-size: 0.9em;
+  }
+}
