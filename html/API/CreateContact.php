@@ -2,51 +2,69 @@
 
 	$inData = getRequestInfo();
 
-
    $servername = "localhost";
    $username = "ArminSQLUser";
    $password = "pass";
 
    $conn = new mysqli($servername, $username, $password);
 
-
 	if ($conn->connect_error)
 	{
-		returnWithError( $conn->connect_error );
+		sendErrorMessage("CONNECTION_ERROR");
 	}
 	else
 	{
       $conn->select_db("COP4331");
       $sql = $conn->prepare("INSERT INTO CONTACTS (User_ID, First_Name, Last_Name, Phone, Email) VALUES (?,?,?,?,?)");
       $sql->bind_param("issss", $inData["User_ID"], $inData["First_Name"], $inData["Last_Name"], $inData["Phone"], $inData["Email"]);
-      $success = $sql->execute();
 
-      sendResultInfoAsJson(json_encode(array("Success" => ($success===false ? mysql_errno($conn) : "true"))));
+      if(!$sql->execute())
+      {
+         switch ($conn->errno)
+         {
+            case 1062:
+               sendErrorMessage("DUP_CONTACT");
+               break;
+            case 1048:
+               sendErrorMessage("REQUIRED");
+               break;
+            case 1232:
+               sendErrorMessage("TYPE_MISMATCH");
+               break;
+            case 1452:
+               sendErrorMessage("BAD_ID");
+               break;
+            default:
+               sendErrorMessage("UNKOWN_ERROR");
+         }
+      }
+
+      sendNoError();
 
 		$conn->close();
 	}
 
-	function getRequestInfo()
+   function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
 	}
 
-	function sendResultInfoAsJson( $obj )
+   function sendResultInfoAsJson( $obj )
 	{
 		header('Content-type: application/json');
 		echo $obj;
+      // once we return something, end the script
+      exit;
 	}
 
-	function returnWithError( $err )
+	function sendErrorMessage( $err )
 	{
-		$retValue = '{"ID":0,"First_Name":"","Last_Name":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array("error" => $err)));
 	}
 
-	function returnWithInfo( $First_Name, $Last_Name, $ID )
-	{
-		$retValue = '{"ID":' . $ID . ',"First_Name":"' . $First_Name . '","Last_Name":"' . $Last_Name . '","error":""}';
-		sendResultInfoAsJson( $retValue );
-	}
+   function sendNoError()
+   {
+      sendErrorMessage("");
+   }
 
 ?>

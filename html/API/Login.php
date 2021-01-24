@@ -2,10 +2,6 @@
 
 	$inData = getRequestInfo();
 
-	$ID = 0;
-	$First_Name = "";
-	$Last_Name = "";
-
    $servername = "localhost";
    $username = "ArminSQLUser";
    $password = "pass";
@@ -14,35 +10,50 @@
 
 	if ($conn->connect_error)
 	{
-		returnWithError( $conn->connect_error );
+		sendErrorMessage("CONNECTION_ERROR");
 	}
 	else
 	{
-
       $conn->select_db("COP4331");
-		$sql = "SELECT ID,First_Name,Last_Name FROM USERS where Username='" . $inData["Username"] . "' and Password='" . $inData["Password"] . "'";
-		$result = $conn->query($sql);
+      $sql = $conn->prepare("SELECT ID,First_Name,Last_Name,Password FROM USERS where Username=?");
+      $sql->bind_param("s", $inData["Username"]);
+
+      if(!$sql->execute())
+      {
+         switch ($conn->errno)
+         {
+            case 1048:
+               sendErrorMessage("REQUIRED");
+            default:
+               sendErrorMessage("UNKOWN_ERROR");
+         }
+      }
+
+      $result = $sql->get_result();
+
 		if ($result->num_rows > 0)
 		{
 			$row = $result->fetch_assoc();
-			$First_Name = $row["First_Name"];
-			$Last_Name = $row["Last_Name"];
-			$ID = $row["ID"];
+         // check if the password was entered incorrectly
+         if ($row["Password"] != $inData["Password"]) sendErrorMessage("WRONG_PASS");
+         // get rid of the password so that we dont risk returning it
+         unset($row["Password"]);
 
          $sql = $conn->prepare("UPDATE USERS SET Last_Login = now() WHERE ID = ?");
-         $sql->bind_param("i", $ID);
+         $sql->bind_param("i", $row["ID"]);
          $sql->execute();
 
-			returnWithInfo($First_Name, $Last_Name, $ID);
+         $row["error"] = "";
+         sendResultInfoAsJson(json_encode($row));
 		}
 		else
 		{
-			returnWithError( "No Records Found" );
+			sendErrorMessage("NO_USER");
 		}
 		$conn->close();
 	}
 
-	function getRequestInfo()
+   function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
 	}
@@ -51,18 +62,18 @@
 	{
 		header('Content-type: application/json');
 		echo $obj;
+      // once we return something, end the script
+      exit;
 	}
 
-	function returnWithError( $err )
+	function sendErrorMessage( $err )
 	{
-		$retValue = '{"ID":0,"First_Name":"","Last_Name":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array("error" => $err)));
 	}
 
-	function returnWithInfo( $First_Name, $Last_Name, $ID )
-	{
-		$retValue = '{"ID":' . $ID . ',"First_Name":"' . $First_Name . '","Last_Name":"' . $Last_Name . '","error":""}';
-		sendResultInfoAsJson( $retValue );
-	}
+   function sendNoError()
+   {
+      sendErrorMessage("");
+   }
 
 ?>
