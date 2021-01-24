@@ -28,14 +28,15 @@ function login() {
       if (res.error) {
         showErrorMessage();
       }
+      else {
+        // Switches to manage page after successfully logging in
+        window.location.href = "/manage/index.html";
+      }
     })
     .catch(err => console.log(err));
 
     // Saves a cookie
     // saveCookie();
-
-    // Switches to manage page after successfully logging in
-    window.location.href = "/manage/index.html";
 }
 
 
