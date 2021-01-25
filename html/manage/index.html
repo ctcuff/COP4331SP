@@ -4,20 +4,31 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/css/manage.css"/>
+        <link rel="stylesheet" href="/css/home.css"/>
+        <link rel="stylesheet" href="/css/global.css"/>
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <title>Manage</title>
     </head>
-    <body style = "background-color: #eeeeee">
-        <div class = "header">
-            <p>ourcontactmanager.rocks</p>
-        </div>
-        <div class = "table">
-            Table
-        </div>
-        <div class = "buttons">
-            <button class = "btn-add">Add</button>
-            <button class = "btn-delete">Delete</button>
-            <button class = "btn-update">Update</button>
+    <body>
+        <a href="#" class="logo">ourcontactmanager.rocks</a>
+        <div class="container" style="align-items: center;">
+            <div id="contacts">
+                <input type="text" placeholder="Search..." class="search-bar" style="margin-top: 100px;">
+                <div style="overflow: auto; height: 500px;">
+                    <table class="table">
+                        <tr class="header">
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="btn-wrapper">
+                    <button class = "btn-crud">Add</button>
+                    <button class = "btn-crud">Delete</button>
+                    <button class = "btn-crud">Update</button>
+                </div>
+            </div>
         </div>
     </body>
 </html>
