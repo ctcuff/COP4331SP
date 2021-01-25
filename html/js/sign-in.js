@@ -6,7 +6,7 @@ const errorCloseBtn = document.querySelector('.error-message-close-btn');
 
 function login() {
   const username = usernameInput.value.trim();
-  const password = passwordInput.value.trim();
+  const password = md5( passwordInput.value.trim());
 
   if (!username || !password) {
     return;
@@ -17,7 +17,6 @@ function login() {
     Password: password
   };
 
-  // Does this fulfill the AJAX requirements?
   fetch('http://ourcontactmanager.rocks/API/Login.php', {
     method: 'POST',
     body: JSON.stringify(postData),
@@ -29,13 +28,12 @@ function login() {
         showErrorMessage();
       }
       else {
-        // Switches to manage page after successfully logging in
-        window.location.href = "/manage/index.html";
+          // Switches to manage page after successfully logging in
+          window.location.href = "/manage/index.html";
       }
     })
     .catch(err => console.log(err));
 
-    // Saves a cookie
     // saveCookie();
 }
 
