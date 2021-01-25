@@ -17,9 +17,8 @@
 	else
 	{
       $conn->select_db("COP4331");
-      // everything will partially match with nothing, so get rid of blank fields
+      // everything will partially match with a blank field, so get rid of blank fields
       $inData = array_filter($inData);
-      //echo json_encode($inData);
 
       // get the contacts from this user, given the information. note that we use a partial
       // match here so that the user doesnt have to be exact.
@@ -31,15 +30,17 @@
          Phone like CONCAT('%',?,'%') OR
          Email like CONCAT('%',?,'%')
          )
-         "); //OR Last_Name LIKE %?% OR Phone LIKE %?% OR Email LIKE %?%
+         ");
       $sql->bind_param("issss", $inData["User_ID"], $inData["First_Name"],$inData["Last_Name"],$inData["Phone"],$inData["Email"]);
       $success = $sql->execute();
       // get result from query and get all result rows
       $rows = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
-      // add error key to signal no error
-      $rows["error"] = "";
+      $res = array(
+         "contacts" => $rows,
+         "error" => ""
+      );
 
-      sendResultInfoAsJson(json_encode($rows));
+      sendResultInfoAsJson(json_encode($res));
 
 		$conn->close();
 	}
