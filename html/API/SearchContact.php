@@ -12,43 +12,59 @@
 
 	if ($conn->connect_error)
 	{
-		returnWithError( $conn->connect_error );
+		sendErrorMessage( "CONNECTION_ERROR" );
 	}
 	else
 	{
       $conn->select_db("COP4331");
-      $sql = $conn->prepare("SELECT * FROM CONTACTS WHERE ID='?'");
-      $sql->bind_param("i", $inData["User_ID"]);
-      $success = $sql->execute();
-      $row = $sql->get_result()->fetch_assoc();
-      $row = json_encode($row);
+      // everything will partially match with nothing, so get rid of blank fields
+      $inData = array_filter($inData);
+      //echo json_encode($inData);
 
-      sendResultInfoAsJson(json_encode(array("Success" => ($success===false ? mysql_errno($conn) : "true"))));
+      // get the contacts from this user, given the information. note that we use a partial
+      // match here so that the user doesnt have to be exact.
+      // We have to use the CONCAT function because % isnt properly escaped in the prepare function
+      $sql = $conn->prepare("SELECT Contact_ID,First_Name,Last_Name,Phone,Email FROM CONTACTS WHERE
+         User_ID=? AND (
+         First_Name like CONCAT('%',?,'%') OR
+         Last_Name like CONCAT('%',?,'%') OR
+         Phone like CONCAT('%',?,'%') OR
+         Email like CONCAT('%',?,'%')
+         )
+         "); //OR Last_Name LIKE %?% OR Phone LIKE %?% OR Email LIKE %?%
+      $sql->bind_param("issss", $inData["User_ID"], $inData["First_Name"],$inData["Last_Name"],$inData["Phone"],$inData["Email"]);
+      $success = $sql->execute();
+      // get result from query and get all result rows
+      $rows = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+      // add error key to signal no error
+      $rows["error"] = "";
+
+      sendResultInfoAsJson(json_encode($rows));
 
 		$conn->close();
 	}
 
-	function getRequestInfo()
+   function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
 	}
 
-	function sendResultInfoAsJson( $obj )
+   function sendResultInfoAsJson( $obj )
 	{
 		header('Content-type: application/json');
 		echo $obj;
+      // once we return something, end the script
+      exit;
 	}
 
-	function returnWithError( $err )
+	function sendErrorMessage( $err )
 	{
-		$retValue = '{"ID":0,"First_Name":"","Last_Name":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array("error" => $err)));
 	}
 
-	function returnWithInfo( $First_Name, $Last_Name, $ID )
-	{
-		$retValue = '{"ID":' . $ID . ',"First_Name":"' . $First_Name . '","Last_Name":"' . $Last_Name . '","error":""}';
-		sendResultInfoAsJson( $retValue );
-	}
+   function sendNoError()
+   {
+      sendErrorMessage("");
+   }
 
 ?>

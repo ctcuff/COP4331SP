@@ -22,6 +22,7 @@
       {
          switch ($conn->errno)
          {
+            // a non-null field was given as null
             case 1048:
                sendErrorMessage("REQUIRED");
             default:
@@ -31,6 +32,7 @@
 
       $result = $sql->get_result();
 
+      // if we found a user with the given username
 		if ($result->num_rows > 0)
 		{
 			$row = $result->fetch_assoc();
@@ -38,11 +40,11 @@
          if ($row["Password"] != $inData["Password"]) sendErrorMessage("WRONG_PASS");
          // get rid of the password so that we dont risk returning it
          unset($row["Password"]);
-
+         // set login for the user to today
          $sql = $conn->prepare("UPDATE USERS SET Last_Login = now() WHERE ID = ?");
          $sql->bind_param("i", $row["ID"]);
          $sql->execute();
-
+         // add error key with blank value to array holding user information before returning it
          $row["error"] = "";
          sendResultInfoAsJson(json_encode($row));
 		}
