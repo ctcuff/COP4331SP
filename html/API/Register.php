@@ -31,7 +31,17 @@
                sendErrorMessage("UNKOWN_ERROR");
          }
       }
-      sendNoError();
+      $sql = $conn->prepare("SELECT ID FROM USERS WHERE Username=?");
+      $sql->bind_param("s", $inData["Username"]);
+      $sql->execute();
+      $ID = $sql->get_result()->fetch_assoc();
+
+      $res = json_encode(array(
+         "ID" => $ID["ID"],
+         "error" => ""
+      ));
+
+      sendResultInfoAsJson($res);
 
 		$conn->close();
 	}
