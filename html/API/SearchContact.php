@@ -2,50 +2,51 @@
 
 	$inData = getRequestInfo();
 
-
    $servername = "localhost";
    $username = "ArminSQLUser";
    $password = "pass";
 
    $conn = new mysqli($servername, $username, $password);
 
-
 	if ($conn->connect_error)
 	{
-		sendErrorMessage( "CONNECTION_ERROR" );
+		sendErrorMessage("CONNECTION_ERROR");
 	}
 	else
 	{
       $conn->select_db("COP4331");
-      // everything will partially match with a blank field, so get rid of blank fields
-      $inData = array_filter($inData);
 
-      // get the contacts from this user, given the information. note that we use a partial
-      // match here so that the user doesnt have to be exact.
-      // We have to use the CONCAT function because % isnt properly escaped in the prepare function
-      $sql = $conn->prepare("SELECT Contact_ID,First_Name,Last_Name,Phone,Email FROM CONTACTS WHERE
-         User_ID=? AND (
-         First_Name like CONCAT('%',?,'%') OR
-         Last_Name like CONCAT('%',?,'%') OR
-         Phone like CONCAT('%',?,'%') OR
-         Email like CONCAT('%',?,'%')
-         )
-         ");
-      $sql->bind_param("issss", $inData["User_ID"], $inData["First_Name"],$inData["Last_Name"],$inData["Phone"],$inData["Email"]);
-      $success = $sql->execute();
-      // get result from query and get all result rows
-      $rows = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
-      $res = array(
-         "contacts" => $rows,
+      $sql = $conn->prepare("INSERT INTO USERS (First_Name, Last_Name, Username, Password) VALUES (?,?,?,?)");
+      $sql->bind_param("ssss", $inData["First_Name"], $inData["Last_Name"], $inData["Username"], $inData["Password"]);
+
+      if(!$sql->execute())
+      {
+         switch ($conn->errno)
+         {
+            case 1062:
+               sendErrorMessage("DUP_USER");
+            case 1048:
+               sendErrorMessage("REQUIRED");
+            default:
+               sendErrorMessage("UNKOWN_ERROR");
+         }
+      }
+      $sql = $conn->prepare("SELECT ID FROM USERS WHERE Username=?");
+      $sql->bind_param("s", $inData["Username"]);
+      $sql->execute();
+      $ID = $sql->get_result()->fetch_assoc();
+
+      $res = json_encode(array(
+         "ID" => $ID["ID"],
          "error" => ""
-      );
+      ));
 
-      sendResultInfoAsJson(json_encode($res));
+      sendResultInfoAsJson($res);
 
 		$conn->close();
 	}
 
-   function getRequestInfo()
+	function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
 	}
