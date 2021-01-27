@@ -1,4 +1,4 @@
-/* Contains styles shared by the sign-in and create-account pages */
+/*  Contains styles shared by the sign-in, create-account and reset-password pages */
 h1 {
   font-weight: 800;
   width: 100%;
@@ -66,45 +66,62 @@ input:focus {
   outline: 1px solid blue;
 }
 
-.error-message {
+.message {
   display: none;
   margin: 1em 0 3em 0;
   flex-direction: row;
-  color: var(--color-error);
-  border: 1px solid var(--color-error);
-  background-color: var(--color-error-bg);
   align-items: center;
   animation: slide-up 0.5s ease-in-out;
   position: relative;
 }
 
-.error-message-content {
+.message--error {
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.message--success {
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+  background-color: var(--color-success-bg);
+}
+
+.message-content {
   padding: 1em 3em 1em 0;
 }
 
-.error-message-close-btn {
+.message-close-btn {
   position: absolute;
   border: none;
   background-color: transparent;
   right: 4px;
   top: 4px;
   font-size: 1.5em;
-  color: var(--color-error);
   cursor: pointer;
 }
 
-.error-message-title {
+.message--error .message-close-btn {
+  color: var(--color-error);
+}
+
+.message--success .message-close-btn {
+  color: var(--color-success);
+}
+
+.message-title {
   margin: 0;
   font-weight: bold;
 }
 
-.error-message-body {
+.message-body {
   margin: 0;
   margin-top: 0.5em;
   font-size: 0.9em;
+  line-height: 1.5em;
 }
 
-.error-message-icon {
+.message-icon {
   height: 25px;
   margin: 1em 0.8em;
 }

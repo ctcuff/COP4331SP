@@ -6,10 +6,10 @@ const submitBtn = document.querySelector('.btn-submit');
 
 // Elements related to the error message that shows if something
 // goes wrong during account creation
-const errorContainer = document.querySelector('.error-message');
-const errorCloseBtn = document.querySelector('.error-message-close-btn');
-const errorTitle = document.querySelector('.error-message-title');
-const errorBody = document.querySelector('.error-message-body');
+const errorContainer = document.querySelector('.message--error');
+const errorCloseBtn = errorContainer.querySelector('.message-close-btn');
+const errorTitle = errorContainer.querySelector('.message-title');
+const errorBody = errorContainer.querySelector('.message-body');
 
 submitBtn.addEventListener('click', register);
 errorCloseBtn.addEventListener('click', closeErrorMessage);
@@ -59,7 +59,7 @@ function validateInputs() {
   if (password.length < 5 || password.length > 32) {
     showErrorMessage(
       'Invalid password length',
-      'Password must be between 5 characters and 32.'
+      'Password must be between 5 and 32 characters.'
     );
     return false;
   }
@@ -110,7 +110,11 @@ function createAccount(userInfo) {
       if (res.error) {
         handleRegisterError(res.error);
       } else {
-        saveCookie(username, password, res.ID);
+        saveCookie({
+          username,
+          password,
+          userId: res.ID
+        });
         window.location.href = '/manage';
       }
     })
@@ -137,7 +141,8 @@ function handleRegisterError(errorCode) {
       break;
     default:
       errorTitle = 'Error creating account';
-      errorMessage = 'An error occurred while creating account. Please try again.';
+      errorMessage =
+        'An error occurred while creating your account. Please try again.';
       break;
   }
 
@@ -145,16 +150,21 @@ function handleRegisterError(errorCode) {
 }
 
 /**
- * @param {string} username
- * @param {string} hashedPassword
- * @param {string} userId
+ * Takes an object of key value pairs and adds each
+ * key/value pair to document.cookie.
+ * @param {Object.<string, any>} cookieObj
  */
-function saveCookie(username, hashedPassword, userId) {
+function saveCookie(cookieObj) {
   const minutes = 20;
   const date = new Date();
   // Set the cookie to expire in 20 minutes
   date.setTime(date.getTime() + minutes * 60 * 1000);
-  document.cookie = `username=${username},password=${hashedPassword},userId=${userId};expires=${date.toGMTString()}`;
+
+  // Loop through the cookieObj to save each cookie individually
+  Object.keys(cookieObj).forEach(key => {
+    const value = cookieObj[key];
+    document.cookie = `${key}=${value};expires=${date.toGMTString()};path=/`;
+  });
 }
 
 /**
@@ -167,6 +177,7 @@ function showErrorMessage(title, message) {
   errorContainer.style.display = 'flex';
   errorTitle.innerText = title;
   errorBody.innerText = message;
+  errorContainer.scrollIntoView();
 }
 
 function closeErrorMessage() {

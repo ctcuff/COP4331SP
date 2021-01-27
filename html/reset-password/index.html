@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/home.css" />
     <link rel="stylesheet" href="/css/global.css" />
-    <link rel="stylesheet" href="/css/create-account.css" />
+    <link rel="stylesheet" href="/css/reset-password.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
       rel="stylesheet"
     />
-    <title>Sign Up</title>
+    <title>Reset Password</title>
   </head>
   <body>
     <a href="#" class="logo">ourcontactmanager.rocks</a>
     <div class="container">
-      <div class="create-account">
-        <h1>Create Account</h1>
+      <div class="reset-password">
+        <h1>Reset Password</h1>
         <div class="input-container">
           <label for="first-name">First name</label>
           <input
@@ -43,7 +43,7 @@
             autocapitalize="none"
             autocorrect="off"
           />
-          <label for="password">Password</label>
+          <label for="password">New password</label>
           <input
             type="password"
             name="password"
@@ -51,10 +51,18 @@
             autocapitalize="none"
             autocorrect="off"
           />
-          <button class="btn-submit">Sign up</button>
+          <label for="password-confirm">Confirm password</label>
+          <input
+            type="password"
+            name="password"
+            id="password-confirm"
+            autocapitalize="none"
+            autocorrect="off"
+          />
+          <button class="btn-submit">Reset</button>
         </div>
-        <div class="sign-in-message">
-          Already have an account? <a href="/sign-in">Sign In</a>.
+        <div class="reset-password-message">
+          Ready to go back? <a href="/sign-in">Sign In</a>.
         </div>
         <div class="message message--error">
           <svg
@@ -73,10 +81,29 @@
             <p class="message-body"></p>
           </div>
         </div>
+        <div class="message message--success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="message-icon"
+          >
+            <path
+              fill="#067973"
+              d="M19.293 5.293L9 15.586l-4.293-4.293a.999.999 0 10-1.414 1.414l5 5a.999.999 0 001.414 0l11-11a.999.999 0 10-1.414-1.414z"
+            />
+          </svg>
+          <div class="message-content">
+            <button class="message-close-btn">&times;</button>
+            <p class="message-title">Success</p>
+            <p class="message-body">
+              Your password was reset. You can now sign in.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <script src="/js/constants.js"></script>
     <script src="/js/md5.js"></script>
-    <script src="/js/create-account.js"></script>
+    <script src="/js/reset-password.js"></script>
   </body>
 </html>
