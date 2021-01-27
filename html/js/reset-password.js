@@ -88,7 +88,12 @@ function updateAccount(account) {
   const { firstName, lastName, username } = account;
   const newPassword = md5(account.password);
 
-  const postBody = {};
+  const postBody = {
+    First_Name: firstName,
+    Last_Name: lastName,
+    Username: username,
+    Password: newPassword
+  };
 
   closeErrorMessage();
 
