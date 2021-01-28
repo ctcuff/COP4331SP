@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="/css/home.css"/>
         <link rel="stylesheet" href="/css/global.css"/>
         <link rel="preconnect" href="https://fonts.gstatic.com">
+        <script defer src="/js/manage.js"></script>
         <title>Manage</title>
     </head>
     <body>
@@ -24,9 +25,42 @@
                     </table>
                 </div>
                 <div class="btn-wrapper">
-                    <button class = "btn-crud">Add</button>
-                    <button class = "btn-crud">Delete</button>
-                    <button class = "btn-crud">Update</button>
+                    <button data-btn-target="#buttonAdd" class="btn-crud">Add</button>
+                    <button data-btn-target="#buttonUpdate" class="btn-crud">Update</button>
+                    <button data-btn-target="#buttonDelete" class="btn-crud">Delete</button>
+                    <div class="btn" id="buttonAdd">
+                        <div class="btn-header">
+                            <div class="title">Add contact</div>
+                            <button data-close-btn class="close-btn">&times;</button>
+                        </div>
+
+                        <div class="btn-body">
+                            BUTTON 1
+                        </div>
+                    </div>
+
+                    <div class="btn" id="buttonUpdate">
+                        <div class="btn-header">
+                            <div class="title">Update Contact</div>
+                            <button data-close-btn class="close-btn">&times;</button>
+                        </div>
+
+                        <div class="btn-body">
+                            BUTTON 2
+                        </div>
+                    </div>
+
+                    <div class="btn" id="buttonDelete">
+                        <div class="btn-header">
+                            <div class="title">Delete Contact</div>
+                            <button data-close-btn class="close-btn">&times;</button>
+                        </div>
+
+                        <div class="btn-body">
+                            BUTTON 3
+                        </div>
+                    </div>
+                    <div id="overlay"></div>
                 </div>
             </div>
         </div>
