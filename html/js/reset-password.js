@@ -126,6 +126,11 @@ function handleApiError(errorCode) {
   let errorMessage;
 
   switch (errorCode) {
+    case NO_USER:
+      errorTitle = 'Invalid credentials';
+      errorMessage =
+        "Make sure the information you've provided is correct and try again.";
+        break;
     default:
       errorTitle = 'Error making request';
       errorMessage =
@@ -145,11 +150,13 @@ function showErrorMessage(title, message) {
   errorTitle.innerText = title;
   errorBody.innerText = message;
   errorContainer.scrollIntoView();
+  closeSuccessMessage();
 }
 
 function showSuccessMessage() {
   successContainer.style.display = 'flex';
   successContainer.scrollIntoView();
+  closeErrorMessage();
 }
 
 function closeErrorMessage() {
@@ -157,5 +164,5 @@ function closeErrorMessage() {
 }
 
 function closeSuccessMessage() {
-  successCloseBtn.style.display = 'none';
+  successContainer.style.display = 'none';
 }
