@@ -5,7 +5,9 @@
 * Account Management (Login, Register)
   * Enforced unique usernames
   * Notification for incorrect password on attempted login
+  * "Reset Password" for a user that forgets their password
 * Contact Mangement
   * Create contacts
   * Search through contacts
   * Update/Delete existing contacts
+  * Enforced unique contacts
