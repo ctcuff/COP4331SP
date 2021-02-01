@@ -24,15 +24,15 @@ DROP TABLE IF EXISTS `CONTACTS`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `CONTACTS` (
   `Contact_ID` int NOT NULL AUTO_INCREMENT,
-  `User_ID` int DEFAULT NULL,
-  `First_Name` varchar(20) DEFAULT NULL,
+  `User_ID` int NOT NULL,
+  `First_Name` varchar(20) NOT NULL,
   `Last_Name` varchar(20) DEFAULT NULL,
   `Phone` varchar(15) DEFAULT NULL,
   `Email` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`Contact_ID`),
   UNIQUE KEY `uq_contact` (`User_ID`,`First_Name`,`Last_Name`,`Phone`,`Email`),
-  CONSTRAINT `FK_ContactsUsers` FOREIGN KEY (`User_ID`) REFERENCES `USERS` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_ContactsUsers` FOREIGN KEY (`User_ID`) REFERENCES `USERS` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,14 +45,14 @@ DROP TABLE IF EXISTS `USERS`;
 CREATE TABLE `USERS` (
   `ID` int NOT NULL AUTO_INCREMENT,
   `Username` varchar(20) NOT NULL,
-  `Password` varchar(25) NOT NULL,
+  `Password` varchar(33) NOT NULL,
   `First_Name` varchar(20) NOT NULL,
   `Last_Name` varchar(20) NOT NULL,
   `Date_Created` date DEFAULT NULL,
   `Last_Login` date DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Unique_Username` (`Username`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -79,4 +79,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-22 18:55:45
+-- Dump completed on 2021-02-01 18:43:05
