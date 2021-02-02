@@ -1,6 +1,11 @@
 const openButtons = document.querySelectorAll('[data-btn-target]');
 const closeButtons = document.querySelectorAll('[data-close-btn]');
 const overlay = document.getElementById('overlay');
+const addContactBtn = document.querySelector('#addContactButton');
+const userId = getCookie('userId');
+var urlBase = 'http://ourcontactmanager.rocks/API';
+
+if (!userId) window.location.href = '/sign-in';
 
 openButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -23,6 +28,8 @@ closeButtons.forEach(button => {
     })
 })
 
+addContactBtn.addEventListener('click', addContact);
+
 function openButton(button)
 {
     if (button == null) return;
@@ -35,4 +42,112 @@ function closeButton(button)
     if (button == null) return;
     button.classList.remove('active');
     overlay.classList.remove('active');
+}
+
+function addContact()
+{
+    // *** Tested and the correct strings are returned ***
+    var firstName = document.getElementById("addFirstNameButton").value.trim();
+    var lastName = document.getElementById("addLastNameButton").value.trim();
+    var phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
+    var email = document.getElementById("addEmailButton").value.trim();
+
+    if (!userId) return;
+    if (!firstName || !lastName) return;
+    if (!phoneNumber) phoneNumber = '';
+    if (!email) email = '';
+
+	var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : ' + firstName + '", "Last_Name" : ' + lastName + '", "Phone" : ' + phoneNumber + '", "Email" : ' + email + '}';
+    // *** This line should work ***
+    var url = urlBase + '/CreateContact.php';
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+        //*** Is this necessary? ***
+		xhr.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+                // Prints information in span tag
+				//document.getElementById("colorAddResult").innerHTML = "Color has been added";
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+        // Prints information in span tag
+		//document.getElementById("colorAddResult").innerHTML = err.message;
+	}
+}
+
+function searchContact()
+{
+    // ***************
+    var firstName = document.getElementById("searchBar").value;
+    var lastName = '';
+    var email = '';
+    var phoneNumber = '';
+    // const userId = getCookie('userId');
+
+    var contactList = "";
+
+    var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : ' + firstName + '", "Last_Name" : ' + lastName + '", "Phone" : ' + phoneNumber + '", "Email" : ' + email + '}';
+    var url = urlBase + '/SearchContact.php';
+    // ****************
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+        xhr.onreadystatechange = function()
+        {
+            if (this.readyState == 4 && this.status == 200)
+            {
+                // document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
+                var jsonObject = JSON.parse( xhr.responseText );
+
+                for( var i=0; i<jsonObject.contacts.length; i++ )
+                {
+                    contactList += jsonObject.results[i];
+                    if( i < jsonObject.results.length - 1 )
+                    {
+                        contactList += "<br />\r\n";
+                    }
+                }
+
+                document.getElementById("tableRow").innerHTML = contactList;
+                // document.getElementsByTagName("p")[0].innerHTML = colorList;
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err)
+    {
+        // document.getElementById("colorSearchResult").innerHTML = err.message;
+    }
+
+}
+
+function getCookie(name) {
+  // Creates a string array with each cookie key value pair.
+  // This looks like ["cookie=value", ...]
+  const cookies = document.cookie.split(';');
+
+  // Loop through each cookie to see if it contains the
+  // key we're looking for
+  for (let i = 0; i < cookies.length; i++) {
+    const [key, value] = cookies[i].split('=');
+
+    if (key.trim() === name) {
+      return value;
+    }
+  }
+
+  // Cookie wasn't found so just return null
+  return null;
 }
