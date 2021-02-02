@@ -3,7 +3,7 @@ const closeButtons = document.querySelectorAll('[data-close-btn]');
 const overlay = document.getElementById('overlay');
 const addContactBtn = document.querySelector('#addContactButton');
 const userId = getCookie('userId');
-var urlBase = 'http://ourcontactmanager.rocks/API';
+const urlBase = 'http://ourcontactmanager.rocks/API';
 
 if (!userId) window.location.href = '/sign-in';
 
@@ -47,57 +47,57 @@ function closeButton(button)
 function addContact()
 {
     // *** Tested and the correct strings are returned ***
-    var firstName = document.getElementById("addFirstNameButton").value.trim();
-    var lastName = document.getElementById("addLastNameButton").value.trim();
-    var phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
-    var email = document.getElementById("addEmailButton").value.trim();
+    const firstName = document.getElementById("addFirstNameButton").value.trim();
+    const lastName = document.getElementById("addLastNameButton").value.trim();
+    const phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
+    const email = document.getElementById("addEmailButton").value.trim();
 
     if (!userId) return;
     if (!firstName || !lastName) return;
     if (!phoneNumber) phoneNumber = '';
     if (!email) email = '';
 
-	var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : ' + firstName + '", "Last_Name" : ' + lastName + '", "Phone" : ' + phoneNumber + '", "Email" : ' + email + '}';
-    // *** This line should work ***
+	var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : "' + firstName + '", "Last_Name" : "' + lastName + '", "Phone" : "' + phoneNumber + '", "Email" : "' + email + '"}';
     var url = urlBase + '/CreateContact.php';
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-        //*** Is this necessary? ***
-		xhr.onreadystatechange = function()
-		{
-			if (this.readyState == 4 && this.status == 200)
-			{
-                // Prints information in span tag
-				//document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-        // Prints information in span tag
-		//document.getElementById("colorAddResult").innerHTML = err.message;
-	}
+    xhr.send(jsonPayload);
+	// try
+	// {
+    //     //*** Is this necessary? ***
+	// 	xhr.onreadystatechange = function()
+	// 	{
+	// 		if (this.readyState == 4 && this.status == 200)
+	// 		{
+    //             // Prints information in span tag
+	// 			//document.getElementById("colorAddResult").innerHTML = "Color has been added";
+	// 		}
+	// 	};
+	// }
+	// catch(err)
+	// {
+    //     // Prints information in span tag
+	// 	//document.getElementById("colorAddResult").innerHTML = err.message;
+	// }
 }
 
 function searchContact()
 {
-    // ***************
-    var firstName = document.getElementById("searchBar").value;
-    var lastName = '';
-    var email = '';
-    var phoneNumber = '';
-    // const userId = getCookie('userId');
+    const firstName = "l";
+    const lastName = "";
+    const phoneNumber = "";
+    const email = "";
+    // const firstName = document.getElementById("searchBar").value;
+    // const lastName = '';
+    // const email = '';
+    // const phoneNumber = '';
 
     var contactList = "";
 
     var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : ' + firstName + '", "Last_Name" : ' + lastName + '", "Phone" : ' + phoneNumber + '", "Email" : ' + email + '}';
     var url = urlBase + '/SearchContact.php';
-    // ****************
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -113,8 +113,8 @@ function searchContact()
 
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
-                    contactList += jsonObject.results[i];
-                    if( i < jsonObject.results.length - 1 )
+                    contactList += jsonObject.contacts[i];
+                    if( i < jsonObject.contacts.length - 1 )
                     {
                         contactList += "<br />\r\n";
                     }
