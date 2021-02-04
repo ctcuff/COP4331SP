@@ -14,13 +14,15 @@
         <a href="#" class="logo">ourcontactmanager.rocks</a>
         <div class="container" style="align-items: center;">
             <div id="contacts">
-                <input type="text" placeholder="Search..." class="search-bar" style="margin-top: 100px;">
+                <input id="searchBar" type="search" placeholder="Search..." class="search-bar">
+                <button class="search-button" onclick="searchContact()">Search</button>
                 <div style="overflow: auto; height: 500px;">
                     <table class="table">
                         <tr class="header">
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <tr id="tableRow"></tr>
                         </tr>
                     </table>
                 </div>
@@ -30,12 +32,16 @@
                     <button data-btn-target="#buttonDelete" class="btn-crud">Delete</button>
                     <div class="btn" id="buttonAdd">
                         <div class="btn-header">
-                            <div class="title">Add contact</div>
+                            <div class="title">Add Contact</div>
                             <button data-close-btn class="close-btn">&times;</button>
                         </div>
 
                         <div class="btn-body">
-                            BUTTON 1
+                            <input id="addFirstNameButton" type="text" placeholder="First Name"></input>
+                            <input id="addLastNameButton" type="text" placeholder="Last Name"></input>
+                            <input id="addPhoneNumberButton" type="text" placeholder="Phone Number"></input>
+                            <input id="addEmailButton" type="text" placeholder="Email"></input>
+                            <button id="addContactButton" class="btn-crud">Add Contact</button>
                         </div>
                     </div>
 
