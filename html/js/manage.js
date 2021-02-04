@@ -85,18 +85,14 @@ function addContact()
 
 function searchContact()
 {
-    const firstName = "l";
-    const lastName = "";
-    const phoneNumber = "";
-    const email = "";
-    // const firstName = document.getElementById("searchBar").value;
-    // const lastName = '';
-    // const email = '';
-    // const phoneNumber = '';
+    const firstName = document.getElementById("searchBar").value;
+    const lastName = '';
+    const email = '';
+    const phoneNumber = '';
 
     var contactList = "";
 
-    var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : ' + firstName + '", "Last_Name" : ' + lastName + '", "Phone" : ' + phoneNumber + '", "Email" : ' + email + '}';
+    var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : "' + firstName + '", "Last_Name" : "' + lastName + '", "Phone" : "' + phoneNumber + '", "Email" : "' + email + '"}';
     var url = urlBase + '/SearchContact.php';
 
     var xhr = new XMLHttpRequest();
@@ -108,15 +104,18 @@ function searchContact()
         {
             if (this.readyState == 4 && this.status == 200)
             {
-                // document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
                 var jsonObject = JSON.parse( xhr.responseText );
 
+                // STILL NEED TO PRINT ALL CONTACTS WHEN NOTHING IS TYPED
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
-                    contactList += jsonObject.contacts[i];
+                    contactList += jsonObject.contacts[i].First_Name + " ";
+                    contactList += jsonObject.contacts[i].Last_Name + " ";
+                    contactList += jsonObject.contacts[i].Phone + " ";
+                    contactList += jsonObject.contacts[i].Email + " ";
                     if( i < jsonObject.contacts.length - 1 )
                     {
-                        contactList += "<br />\r\n";
+                        contactList += "<br/>\r\n";
                     }
                 }
 
