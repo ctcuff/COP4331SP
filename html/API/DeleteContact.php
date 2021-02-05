@@ -16,9 +16,15 @@
 	 {
 	 	$conn->select_db("COP4331");//connects to specific Database
 
+
 		$sql = $conn->prepare("DELETE FROM CONTACTS WHERE Contact_ID=?");
 		$sql->bind_param("i", $inData["Contact_ID"]);
 		$sql->execute();
+
+		if($sql->affected_rows == 0)
+		{
+			sendErrorMessage("BAD_CONTACT_ID");
+		}
 
 		sendNoError();
 
@@ -38,14 +44,14 @@
 		 exit;
 	 }
 
-	 function sendErrorMessage( $err )
+	function sendErrorMessage( $err )
  	{
  		sendResultInfoAsJson(json_encode(array("error" => $err)));
  	}
 
-    function sendNoError()
-    {
+  function sendNoError()
+  {
        sendErrorMessage("");
-    }
+  }
 
-	 ?>
+?>
