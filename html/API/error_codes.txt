@@ -5,6 +5,6 @@ DUP_CONTACT - The contact trying to be added has already been added
 REQUIRED - A required value was not given
 TYPE_MISMATCH - The type given differs from the expected type
 CONNECTION_ERROR - An error occurred when trying to connect to the database
-BAD_ID - The ID for the given user to assign a contact to does not exist
+BAD_ID - The ID for the given user does not exist
 BAD_CONTACT_ID - The contact ID given does not exist
 UNKOWN_ERROR
