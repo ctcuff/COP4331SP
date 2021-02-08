@@ -15,14 +15,21 @@
         <div class="container" style="align-items: center;">
             <div id="contacts">
                 <input id="searchBar" type="search" placeholder="Search..." class="search-bar">
+
+
+                <label class="checkBox">View All
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark"></span>
+                </label>
+
+
                 <button class="search-button" onclick="searchContact()">Search</button>
                 <div style="overflow: auto; height: 500px;">
-                    <table class="table">
+                    <table id="tableRow" class="table">
                         <tr class="header">
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <tr id="tableRow"></tr>
                         </tr>
                     </table>
                 </div>
