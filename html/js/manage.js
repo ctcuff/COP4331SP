@@ -46,7 +46,6 @@ function closeButton(button)
 
 function addContact()
 {
-    // *** Tested and the correct strings are returned ***
     const firstName = document.getElementById("addFirstNameButton").value.trim();
     const lastName = document.getElementById("addLastNameButton").value.trim();
     const phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
@@ -64,36 +63,17 @@ function addContact()
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     xhr.send(jsonPayload);
-	// try
-	// {
-    //     //*** Is this necessary? ***
-	// 	xhr.onreadystatechange = function()
-	// 	{
-	// 		if (this.readyState == 4 && this.status == 200)
-	// 		{
-    //             // Prints information in span tag
-	// 			//document.getElementById("colorAddResult").innerHTML = "Color has been added";
-	// 		}
-	// 	};
-	// }
-	// catch(err)
-	// {
-    //     // Prints information in span tag
-	// 	//document.getElementById("colorAddResult").innerHTML = err.message;
-	// }
 }
 
 function searchContact()
 {
-    const firstName = document.getElementById("searchBar").value;
-    const lastName = '';
-    const email = '';
-    const phoneNumber = '';
+    const querySearch = {
+      User_ID: userId,
+      Query: document.getElementById("searchBar").value
+    };
 
-    var contactList = "";
-
-    var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : "' + firstName + '", "Last_Name" : "' + lastName + '", "Phone" : "' + phoneNumber + '", "Email" : "' + email + '"}';
     var url = urlBase + '/SearchContact.php';
+    var contactList = "";
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -106,28 +86,22 @@ function searchContact()
             {
                 var jsonObject = JSON.parse( xhr.responseText );
 
-                // STILL NEED TO PRINT ALL CONTACTS WHEN NOTHING IS TYPED
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
-                    contactList += jsonObject.contacts[i].First_Name + " ";
-                    contactList += jsonObject.contacts[i].Last_Name + " ";
-                    contactList += jsonObject.contacts[i].Phone + " ";
-                    contactList += jsonObject.contacts[i].Email + " ";
-                    if( i < jsonObject.contacts.length - 1 )
-                    {
-                        contactList += "<br/>\r\n";
-                    }
+                    contactList += "<tr>";
+                    contactList += "<td>" + jsonObject.contacts[i].First_Name + " ";
+                    contactList += jsonObject.contacts[i].Last_Name + "</td>";
+                    contactList += "<td>" + jsonObject.contacts[i].Phone + "</td>";
+                    contactList += "<td>" + jsonObject.contacts[i].Email + "</td>";
+                    contactList += "</tr>";
                 }
-
-                document.getElementById("tableRow").innerHTML = contactList;
-                // document.getElementsByTagName("p")[0].innerHTML = colorList;
+                document.getElementById("tableRow").innerHTML += contactList;
             }
         };
-        xhr.send(jsonPayload);
+        xhr.send(JSON.stringify(querySearch));
     }
     catch(err)
     {
-        // document.getElementById("colorSearchResult").innerHTML = err.message;
     }
 
 }
