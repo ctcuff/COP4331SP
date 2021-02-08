@@ -56,13 +56,19 @@ function addContact()
     if (!phoneNumber) phoneNumber = '';
     if (!email) email = '';
 
-	var jsonPayload = '{"User_ID" : "' + userId + '", "First_Name" : "' + firstName + '", "Last_Name" : "' + lastName + '", "Phone" : "' + phoneNumber + '", "Email" : "' + email + '"}';
-    var url = urlBase + '/CreateContact.php';
+    const queryAdd = {
+        User_ID: userId,
+        First_Name: firstName,
+        Last_Name: lastName,
+        Phone: phoneNumber,
+        Email: email
+    }
 
+    var url = urlBase + '/CreateContact.php';
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    xhr.send(jsonPayload);
+    xhr.send(JSON.stringify(queryAdd));
 }
 
 function searchContact()
@@ -86,6 +92,8 @@ function searchContact()
             {
                 var jsonObject = JSON.parse( xhr.responseText );
 
+                document.getElementById("tableRow").innerHTML = "";
+
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
                     contactList += "<tr>";
@@ -103,7 +111,6 @@ function searchContact()
     catch(err)
     {
     }
-
 }
 
 function getCookie(name) {
