@@ -83,6 +83,7 @@ function searchContact()
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
+
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     try
     {
@@ -92,18 +93,27 @@ function searchContact()
             {
                 var jsonObject = JSON.parse( xhr.responseText );
 
-                document.getElementById("tableRow").innerHTML = "";
+                var table = document.getElementById("tableRow");
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
 
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
                     contactList += "<tr>";
-                    contactList += "<td>" + jsonObject.contacts[i].First_Name + " ";
-                    contactList += jsonObject.contacts[i].Last_Name + "</td>";
+                    contactList += "<td>" + jsonObject.contacts[i].First_Name + "</td>";
+                    contactList += "<td>" + jsonObject.contacts[i].Last_Name + "</td>";
                     contactList += "<td>" + jsonObject.contacts[i].Phone + "</td>";
                     contactList += "<td>" + jsonObject.contacts[i].Email + "</td>";
                     contactList += "</tr>";
                 }
                 document.getElementById("tableRow").innerHTML += contactList;
+
+                var elements= document.getElementsByTagName('td');
+                for(var i=0; i<elements.length;i++)
+                {
+                    (elements)[i].addEventListener("click", updateContact);
+                }
             }
         };
         xhr.send(JSON.stringify(querySearch));
@@ -112,6 +122,21 @@ function searchContact()
     {
     }
 }
+
+
+function updateContact()
+{
+    var change = prompt("Update Info:");
+    if (change == null || change == "")
+    {
+        return;
+    }
+    else
+    {
+        this.innerHTML = change;
+    }
+}
+
 
 function getCookie(name) {
   // Creates a string array with each cookie key value pair.
