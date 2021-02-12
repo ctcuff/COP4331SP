@@ -20,6 +20,17 @@ submitBtn.addEventListener('click', resetPassword);
 errorCloseBtn.addEventListener('click', closeErrorMessage);
 successCloseBtn.addEventListener('click', closeSuccessMessage);
 
+Array.from(document.querySelectorAll('input')).forEach(input => {
+  input.addEventListener('keydown', onEnterPress);
+});
+
+function onEnterPress(event) {
+  if (event.key === 'Enter' && !event.repeat) {
+    event.preventDefault();
+    resetPassword();
+  }
+}
+
 /**
  * @returns {boolean} True if all inputs are valid, false otherwise.
  */
@@ -130,7 +141,7 @@ function handleApiError(errorCode) {
       errorTitle = 'Invalid credentials';
       errorMessage =
         "Make sure the information you've provided is correct and try again.";
-        break;
+      break;
     default:
       errorTitle = 'Error making request';
       errorMessage =

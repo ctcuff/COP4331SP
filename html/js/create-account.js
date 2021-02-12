@@ -14,6 +14,17 @@ const errorBody = errorContainer.querySelector('.message-body');
 submitBtn.addEventListener('click', register);
 errorCloseBtn.addEventListener('click', closeErrorMessage);
 
+Array.from(document.querySelectorAll('input')).forEach(input => {
+  input.addEventListener('keydown', onEnterPress);
+});
+
+function onEnterPress(event) {
+  if (event.key === 'Enter' && !event.repeat) {
+    event.preventDefault();
+    register();
+  }
+}
+
 function register() {
   const firstName = firstNameInput.value.trim();
   const lastName = lastNameInput.value.trim();

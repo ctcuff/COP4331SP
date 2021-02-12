@@ -1,7 +1,6 @@
 const usernameInput = document.querySelector('#username');
 const passwordInput = document.querySelector('#password');
 const submitBtn = document.querySelector('.btn-submit');
-//const submitBtnEnter = document.querySelector('.btn-submit');
 
 // Elements related to the error message that shows if something
 // goes wrong during sign in.
@@ -12,15 +11,17 @@ const errorBody = errorContainer.querySelector('.message-body');
 
 errorCloseBtn.addEventListener('click', hideErrorMessage);
 submitBtn.addEventListener('click', login);
-/*submitBtnEnter.addEventListener("keyup", function(event) {
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-    // Cancel the default action, if needed
+usernameInput.addEventListener('keydown', onEnterPress);
+passwordInput.addEventListener('keydown', onEnterPress);
+
+function onEnterPress(event) {
+  // Login when enter is pressed in any of the inputs
+  if (event.key === 'Enter' && !event.repeat) {
+    // Cancel the default action
     event.preventDefault();
-    // Trigger the button element with a click
-    document.getElementById("INSERTBUTTONID").click();
+    login();
   }
-});*/
+}
 
 function login() {
   const username = usernameInput.value.trim();
