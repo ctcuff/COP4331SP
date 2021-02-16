@@ -1,17 +1,48 @@
 const openButtons = document.querySelectorAll('[data-btn-target]');
 const closeButtons = document.querySelectorAll('[data-close-btn]');
 const overlay = document.getElementById('overlay');
-const addContactBtn = document.querySelector('#addContactButton');
+
+const addContactBtn = document.querySelector('.btn-crud--add');
+const addContactModal = document.querySelector('.add-contact-modal');
+const updateContactBtn = document.querySelector('.btn-crud--update');
+const updateContactModal = document.querySelector('.update-contact-modal');
+const deleteContactBtn = document.querySelector('.btn-crud--delete');
+const deleteContactModal = document.querySelector('.delete-contact-modal');
+
 const userId = getCookie('userId');
 const urlBase = 'http://ourcontactmanager.rocks/API';
 
 if (!userId) window.location.href = '/sign-in';
 
-openButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const btn = document.querySelector(button.dataset.btnTarget)
-        openButton(btn);
-    })
+// Add contact modal
+addContactBtn.addEventListener('click', (event) => {
+    addContactModal.classList.add('active');
+    overlay.classList.add('active');
+})
+
+// Update contact modal
+updateContactBtn.addEventListener('click', (event) => {
+    let activeRow = document.querySelector("tr.active");
+    if (!activeRow) return;
+
+    updateContactModal.classList.add('active');
+    overlay.classList.add('active');
+
+    let first = document.getElementById("updateFirst");
+    let last = document.getElementById("updateLast");
+    let phone = document.getElementById("updatePhone");
+    let email = document.getElementById("updateEmail");
+
+    first.value = activeRow.children[0].innerText;
+    last.value = activeRow.children[1].innerText;
+    phone.value = activeRow.children[2].innerText;
+    email.value = activeRow.children[3].innerText;
+})
+
+// Delete contact modal
+deleteContactBtn.addEventListener('click', (event) => {
+    deleteContactModal.classList.add('active');
+    overlay.classList.add('active');
 })
 
 overlay.addEventListener('click', () => {
@@ -28,7 +59,10 @@ closeButtons.forEach(button => {
     })
 })
 
-addContactBtn.addEventListener('click', addContact);
+// Send query to database
+addContactButton.addEventListener('click', addContact);
+updateContactButton.addEventListener('click', updateContact);
+deleteContactButton.addEventListener('click', deleteContact);
 
 function openButton(button)
 {
@@ -100,7 +134,7 @@ function searchContact()
 
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
-                    contactList += "<tr>";
+                    contactList += `<tr data-contact-id=${jsonObject.contacts[i].Contact_ID}>`;
                     contactList += "<td>" + jsonObject.contacts[i].First_Name + "</td>";
                     contactList += "<td>" + jsonObject.contacts[i].Last_Name + "</td>";
                     contactList += "<td>" + jsonObject.contacts[i].Phone + "</td>";
@@ -109,10 +143,10 @@ function searchContact()
                 }
                 document.getElementById("tableRow").innerHTML += contactList;
 
-                var elements= document.getElementsByTagName('td');
+                var elements= document.getElementsByTagName('tr');
                 for(var i=0; i<elements.length;i++)
                 {
-                    (elements)[i].addEventListener("click", updateContact);
+                    (elements)[i].addEventListener("click", setActive);
                 }
             }
         };
@@ -123,20 +157,94 @@ function searchContact()
     }
 }
 
+function setActive(event)
+{
+    let activeElement = document.querySelector(".active");
+
+    if (activeElement)
+    {
+        activeElement.classList.remove("active");
+    }
+
+    event.target.parentElement.classList.add("active");
+}
 
 function updateContact()
 {
-    var change = prompt("Update Info:");
-    if (change == null || change == "")
-    {
-        return;
+    let first = document.getElementById("updateFirst").value.trim();
+    let last = document.getElementById("updateLast").value.trim();
+    let phone = document.getElementById("updatePhone").value.trim();
+    let email = document.getElementById("updateEmail").value.trim();
+
+    let selectedRow = document.querySelector(".active");
+    let contactID = selectedRow.dataset.contactId;
+
+    const queryUpdate = {
+        Contact_ID: contactID,
+        First_Name: first,
+        Last_Name: last,
+        Phone: phone,
+        Email: email
     }
-    else
+
+    var url = urlBase + '/UpdateContact.php';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
     {
-        this.innerHTML = change;
+        xhr.onreadystatechange = function()
+        {
+            if (this.readyState == 4 && this.status == 200)
+            {
+                var jsonObject = JSON.parse( xhr.responseText );
+
+                selectedRow.children[0].innerText = first;
+                selectedRow.children[1].innerText = last;
+                selectedRow.children[2].innerText = phone;
+                selectedRow.children[3].innerText = email;
+            }
+        };
+        xhr.send(JSON.stringify(queryUpdate));
+    }
+    catch(err)
+    {
     }
 }
 
+function deleteContact()
+{
+    let selectedRow = document.querySelector(".active");
+    let contactID = selectedRow.dataset.contactId;
+
+    const queryDelete = {
+        Contact_ID: contactID,
+    }
+
+    var url = urlBase + '/DeleteContact.php';
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+        xhr.onreadystatechange = function()
+        {
+            if (this.readyState == 4 && this.status == 200)
+            {
+                document.getElementsByTagName('h4')[0].innerHTML = "Contact deleted successfully!";
+                document.getElementById('tableRow').deleteRow(selectedRow.rowIndex);
+            }
+        };
+        xhr.send(JSON.stringify(queryDelete));
+    }
+    catch(err)
+    {
+    }
+}
 
 function getCookie(name) {
   // Creates a string array with each cookie key value pair.
