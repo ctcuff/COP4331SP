@@ -15,14 +15,6 @@
         <div class="container" style="align-items: center;">
             <div id="contacts">
                 <input id="searchBar" type="search" placeholder="Search..." class="search-bar">
-
-
-                <label class="checkBox">View All
-                    <input type="checkbox" checked="checked">
-                    <span class="checkmark"></span>
-                </label>
-
-
                 <button class="search-button" onclick="searchContact()">Search</button>
                 <div style="overflow: auto; height: 500px;">
                     <table id="tableRow" class="table">
@@ -35,10 +27,11 @@
                     </table>
                 </div>
                 <div class="btn-wrapper">
-                    <button data-btn-target="#buttonAdd" class="btn-crud">Add</button>
-                    <button data-btn-target="#buttonUpdate" class="btn-crud">Update</button>
-                    <button data-btn-target="#buttonDelete" class="btn-crud">Delete</button>
-                    <div class="btn" id="buttonAdd">
+                    <button data-btn-target="#buttonAdd" class="btn-crud btn-crud--add" style="margin: 0 50px 0 100px">Add</button>
+                    <button data-btn-target="#buttonUpdate" class="btn-crud btn-crud--update">Update</button>
+                    <button data-btn-target="#buttonDelete" class="btn-crud btn-crud--delete" style="margin: 0 100px 0 50px">Delete</button>
+                    <!-- Add button -->
+                    <div class="btn add-contact-modal" id="buttonAdd">
                         <div class="btn-header">
                             <div class="title">Add Contact</div>
                             <button data-close-btn class="close-btn">&times;</button>
@@ -51,26 +44,29 @@
                             <button id="addContactButton" class="btn-crud">Add Contact</button>
                         </div>
                     </div>
-
-                    <div class="btn" id="buttonUpdate">
+                    <!-- Update Button -->
+                    <div class="btn update-contact-modal" id="buttonUpdate">
                         <div class="btn-header">
                             <div class="title">Update Contact</div>
                             <button data-close-btn class="close-btn">&times;</button>
                         </div>
                         <div class="btn-body">
-                            <input id="updateInfo" type="text" placeholder="Change Info"></input>
-                            <button id="addContactButton" class="btn-crud">Update Contact</button>
+                            <input id="updateFirst" type="text" placeholder="First Name"></input>
+                            <input id="updateLast" type="text" placeholder="Last Name"></input>
+                            <input id="updatePhone" type="text" placeholder="Phone Number"></input>
+                            <input id="updateEmail" type="text" placeholder="Email"></input>
+                            <button id="updateContactButton" class="btn-crud">Update Contact</button>
                         </div>
                     </div>
-
-                    <div class="btn" id="buttonDelete">
+                    <!-- Delete Button -->
+                    <div class="btn delete-contact-modal" id="buttonDelete">
                         <div class="btn-header">
                             <div class="title">Delete Contact</div>
                             <button data-close-btn class="close-btn">&times;</button>
                         </div>
-
-                        <div class="btn-body">
-                            BUTTON 3
+                        <h4 style="text-align: center">Are you sure you want to delete this contact?</h4>
+                        <div style="display: flex; align-items: center; margin: 0px 20px 15px 20px;">
+                            <button id="deleteContactButton" class="btn-crud" style="margin: 0 90px 0 90px">Yes</button>
                         </div>
                     </div>
                     <div id="overlay"></div>
