@@ -1,14 +1,12 @@
 const openButtons = document.querySelectorAll('[data-btn-target]');
 const closeButtons = document.querySelectorAll('[data-close-btn]');
 const overlay = document.getElementById('overlay');
-
 const addContactBtn = document.querySelector('.btn-crud--add');
 const addContactModal = document.querySelector('.add-contact-modal');
 const updateContactBtn = document.querySelector('.btn-crud--update');
 const updateContactModal = document.querySelector('.update-contact-modal');
 const deleteContactBtn = document.querySelector('.btn-crud--delete');
 const deleteContactModal = document.querySelector('.delete-contact-modal');
-
 const userId = getCookie('userId');
 const urlBase = 'http://ourcontactmanager.rocks/API';
 
@@ -41,6 +39,9 @@ updateContactBtn.addEventListener('click', (event) => {
 
 // Delete contact modal
 deleteContactBtn.addEventListener('click', (event) => {
+    let activeRow = document.querySelector("tr.active");
+    if (!activeRow) return;
+
     deleteContactModal.classList.add('active');
     overlay.classList.add('active');
 })
@@ -58,6 +59,11 @@ closeButtons.forEach(button => {
         closeButton(btn);
     })
 })
+
+viewAll.addEventListener('click', () => {
+    document.getElementById("searchBar").value = "";
+    searchContact();
+});
 
 // Send query to database
 addContactButton.addEventListener('click', addContact);
