@@ -46,7 +46,7 @@ deleteContactBtn.addEventListener('click', (event) => {
     overlay.classList.add('active');
 })
 
-overlay.addEventListener('click', () => {
+let closeModal = overlay.addEventListener('click', () => {
     const buttons = document.querySelectorAll('.btn.active')
     buttons.forEach(button => {
         closeButton(button);
@@ -66,9 +66,27 @@ viewAll.addEventListener('click', () => {
 });
 
 // Send query to database
-addContactButton.addEventListener('click', addContact);
-updateContactButton.addEventListener('click', updateContact);
-deleteContactButton.addEventListener('click', deleteContact);
+addContactButton.addEventListener('click', () => {
+    const button = document.querySelector('.btn.active')
+    closeButton(button);
+    addContact();
+});
+
+updateContactButton.addEventListener('click', () => {
+    const button = document.querySelector('.btn.active')
+    closeButton(button);
+    updateContact();
+});
+
+deleteContactButton.addEventListener('click', () => {
+    const button = document.querySelector('.btn.active')
+
+    setTimeout(function(){
+        closeButton(button);
+    },1000);
+
+    deleteContact();
+});
 
 function openButton(button)
 {
