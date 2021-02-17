@@ -14,7 +14,10 @@
         <a href="#" class="logo">ourcontactmanager.rocks</a>
         <div class="container" style="align-items: center;">
             <div id="contacts">
-                <input id="searchBar" type="search" placeholder="Search..." class="search-bar">
+                <div>
+                    <input id="searchBar" type="search" placeholder="Search..." class="search-bar">
+                    <button id="viewAll" class="btn-crud" style="width: 25%; margin-left:30px">View All</button>
+                </div>
                 <button class="search-button" onclick="searchContact()">Search</button>
                 <div style="overflow: auto; height: 500px;">
                     <table id="tableRow" class="table">
