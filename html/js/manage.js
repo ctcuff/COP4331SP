@@ -9,6 +9,7 @@ const deleteContactBtn = document.querySelector('.btn-crud--delete');
 const deleteContactModal = document.querySelector('.delete-contact-modal');
 const userId = getCookie('userId');
 const urlBase = 'http://ourcontactmanager.rocks/API';
+const searchBar = document.getElementById("searchBar");
 
 if (!userId) window.location.href = '/sign-in';
 
@@ -78,14 +79,30 @@ updateContactButton.addEventListener('click', () => {
     updateContact();
 });
 
+searchBar.addEventListener('keydown', onEnterPress);
+
+let locked = false;
 deleteContactButton.addEventListener('click', () => {
     const button = document.querySelector('.btn.active')
 
-    setTimeout(function(){
-        closeButton(button);
-    },1000);
+    if (!locked)
+    {
+        // Prevent user from deleteing more contacts
+        locked = true;
+        // Delete only one contact
+        deleteContact();
 
-    deleteContact();
+        // Close modal
+        setTimeout(function(){
+            closeButton(button);
+        },1000);
+
+        // Unlocks
+        setTimeout(function(){
+            locked = false;
+            document.getElementsByTagName('h4')[0].innerHTML = "Are you sure you want to delete this contact?";
+        },2000);
+    }
 });
 
 function openButton(button)
@@ -133,7 +150,7 @@ function searchContact()
 {
     const querySearch = {
       User_ID: userId,
-      Query: document.getElementById("searchBar").value
+      Query: searchBar.value
     };
 
     var url = urlBase + '/SearchContact.php';
@@ -167,7 +184,7 @@ function searchContact()
                 }
                 document.getElementById("tableRow").innerHTML += contactList;
 
-                var elements= document.getElementsByTagName('tr');
+                var elements= document.querySelectorAll('tr:not(tr.header)');
                 for(var i=0; i<elements.length;i++)
                 {
                     (elements)[i].addEventListener("click", setActive);
@@ -270,6 +287,15 @@ function deleteContact()
     }
 }
 
+function onEnterPress(event) {
+  // Login when enter is pressed in any of the inputs
+  if (event.key === 'Enter' && !event.repeat) {
+    // Cancel the default action
+    event.preventDefault();
+    searchContact();
+  }
+}
+
 function getCookie(name) {
   // Creates a string array with each cookie key value pair.
   // This looks like ["cookie=value", ...]
@@ -287,4 +313,10 @@ function getCookie(name) {
 
   // Cookie wasn't found so just return null
   return null;
+}
+
+function doLogout()
+{
+	document.cookie = "userId=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+	window.location.href = "/";
 }
