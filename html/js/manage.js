@@ -317,6 +317,5 @@ function getCookie(name) {
 
 function doLogout()
 {
-	document.cookie = "userId=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "/";
+	document.cookie = `userId=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 }

@@ -1,1 +1,1 @@
-window.location.replace("sign-in/index.html");
+window.location.replace("sign-in/");
