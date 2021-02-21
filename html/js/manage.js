@@ -81,6 +81,9 @@ updateContactButton.addEventListener('click', () => {
 
 searchBar.addEventListener('keydown', onEnterPress);
 
+// load all contacts on window load
+window.onload = searchContact;
+
 let locked = false;
 deleteContactButton.addEventListener('click', () => {
     const button = document.querySelector('.btn.active')
