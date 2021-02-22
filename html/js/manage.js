@@ -13,6 +13,37 @@ const searchBar = document.getElementById("searchBar");
 
 if (!userId) window.location.href = '/sign-in';
 
+// user action feedback (toast notification)
+
+const Toast = {
+  init() {
+    this.hideTimeout = null;
+
+    this.el = document.createElement("div");
+    this.el.className = "toast";
+    document.body.appendChild(this.el);
+  },
+
+  show(message, state) {
+    clearTimeout(this.hideTimeout);
+
+    this.el.textContent = message;
+    this.el.className = "toast toast--visible";
+
+    if (state) {
+      this.el.classList.add(`toast--${state}`);
+    }
+
+    this.hideTimeout = setTimeout(() => {
+      this.el.classList.remove("toast--visible");
+    }, 3000);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => Toast.init());
+
+
+
 // Add contact modal
 addContactBtn.addEventListener('click', (event) => {
     addContactModal.classList.add('active');
@@ -142,11 +173,49 @@ function addContact()
         Email: email
     }
 
-    var url = urlBase + '/CreateContact.php';
+   var url = urlBase + '/CreateContact.php';
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    xhr.send(JSON.stringify(queryAdd));
+   try
+   {
+      xhr.onreadystatechange = function()
+      {
+           if (this.readyState == 4 && this.status == 200)
+           {
+              try
+              {
+               var jsonObject = JSON.parse( xhr.responseText );
+               if(jsonObject.error != "") throw new Error(jsonObject.error);
+               Toast.show("Contact added successfully", "success");
+               }
+               catch(errCode)
+               {
+                 showErrorWithToast(errCode.message);
+               }
+           }
+      };
+      xhr.send(JSON.stringify(queryAdd));
+   }
+   catch(err)
+   {
+
+   }
+}
+
+function showErrorWithToast(errCode)
+{
+   let message = "An unexpected error has occured";
+   switch(errCode)
+   {
+      case "DUP_CONTACT":
+         message = "Contact already exists";
+         break;
+      case "BAD_CONTACT_ID":
+         message = "Contact does not exist";
+         break;
+   }
+   Toast.show(message, "error");
 }
 
 function searchContact()
@@ -243,18 +312,27 @@ function updateContact()
         {
             if (this.readyState == 4 && this.status == 200)
             {
+               try
+               {
                 var jsonObject = JSON.parse( xhr.responseText );
-
+                if(jsonObject.error != "") throw new Error(jsonObject.error);
                 selectedRow.children[0].innerText = first;
                 selectedRow.children[1].innerText = last;
                 selectedRow.children[2].innerText = phone;
                 selectedRow.children[3].innerText = email;
+                Toast.show("Contact updated successfully", "success");
+                }
+                catch(errCode)
+                {
+                  showErrorWithToast(errCode.message);
+                }
             }
         };
         xhr.send(JSON.stringify(queryUpdate));
     }
     catch(err)
     {
+
     }
 }
 
@@ -298,6 +376,7 @@ function onEnterPress(event) {
     searchContact();
   }
 }
+
 
 function getCookie(name) {
   // Creates a string array with each cookie key value pair.
