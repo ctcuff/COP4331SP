@@ -272,14 +272,24 @@ function searchContact()
 
 function setActive(event)
 {
-    let activeElement = document.querySelector(".active");
+    // let activeElement = document.querySelector(".active");
+    // 
+    // if (activeElement)
+    // {
+    //     activeElement.classList.remove("active");
+    // }
 
-    if (activeElement)
+    event.target.parentElement.classList.toggle("active");
+    if(document.querySelectorAll(".active").length == 0)
     {
-        activeElement.classList.remove("active");
-    }
-
-    event.target.parentElement.classList.add("active");
+      updateContactBtn.classList.add("disabledButton");
+      deleteContactBtn.classList.add("disabledButton");
+   }
+   else
+   {
+      updateContactBtn.classList.remove("disabledButton");
+      deleteContactBtn.classList.remove("disabledButton");
+   }
 }
 
 function updateContact()

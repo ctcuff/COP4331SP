@@ -129,6 +129,13 @@
     padding: 10px 15px;
 }
 
+.disabledButton
+{
+  background-color:#2e2e2e;
+  color: #b3b3b3;
+  cursor: not-allowed;
+}
+
 .toast {
   position: fixed;
   top: 0;
