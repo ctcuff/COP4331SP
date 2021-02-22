@@ -38,8 +38,14 @@
                sendErrorMessage("UNKOWN_ERROR");
          }
       }
+      $sql = $conn->prepare("SELECT Contact_ID FROM CONTACTS WHERE (User_ID=? AND First_Name=? AND Last_Name=? AND Phone=? AND Email=?)");
+      $sql->bind_param("issss", $inData["User_ID"], $inData["First_Name"], $inData["Last_Name"], $inData["Phone"], $inData["Email"]);
+      $sql->execute();
 
-      sendNoError();
+      $row = $sql->get_result()->fetch_assoc();
+      $Contact_ID = $row["Contact_ID"];
+      $res = array("Contact_ID" => $Contact_ID, "error" => "");
+      sendResultInfoAsJson(json_encode($res));
 
 		$conn->close();
 	}
