@@ -53,8 +53,11 @@ addContactBtn.addEventListener('click', (event) => {
 
 // Update contact modal
 updateContactBtn.addEventListener('click', (event) => {
-    let activeRow = document.querySelector("tr.active");
-    if (!activeRow) return;
+    const activeRows = document.querySelectorAll("tr.active");
+
+    if (activeRows.length !== 1) return;
+
+    const activeRow = activeRows[0];
 
     updateContactModal.classList.add('active');
     overlay.classList.add('active');
@@ -272,26 +275,26 @@ function searchContact()
     }
 }
 
-function setActive(event)
+function toggleActive(event)
 {
-    // let activeElement = document.querySelector(".active");
-    // 
-    // if (activeElement)
-    // {
-    //     activeElement.classList.remove("active");
-    // }
-
     event.target.parentElement.classList.toggle("active");
-    if(document.querySelectorAll(".active").length == 0)
+    const activeLength = document.querySelectorAll(".active").length
+
+    if (activeLength === 0)
     {
       updateContactBtn.classList.add("disabledButton");
       deleteContactBtn.classList.add("disabledButton");
-   }
-   else
-   {
-      updateContactBtn.classList.remove("disabledButton");
-      deleteContactBtn.classList.remove("disabledButton");
-   }
+    }
+    if (activeLength === 1)
+    {
+        deleteContactBtn.classList.remove("disabledButton");
+        updateContactBtn.classList.remove("disabledButton");
+    }
+
+    if (activeLength > 1)
+    {
+        updateContactBtn.classList.add("disabledButton");
+    }
 }
 
 function updateContact()
@@ -350,34 +353,23 @@ function updateContact()
 
 function deleteContact()
 {
-    let selectedRow = document.querySelector(".active");
-    let contactID = selectedRow.dataset.contactId;
+    const url = urlBase + '/DeleteContact.php';
+    const selectedRows = Array.from(document.querySelectorAll('tr.active'));
 
-    const queryDelete = {
-        Contact_ID: contactID,
-    }
+    selectedRows.forEach(async row => {
+        const contactId = row.dataset.contactId;
+        await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({ Contact_ID: contactId })
+        });
 
-    var url = urlBase + '/DeleteContact.php';
+        tableBody.deleteRow(row.rowIndex - 1);
+    });
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    try
-    {
-        xhr.onreadystatechange = function()
-        {
-            if (this.readyState == 4 && this.status == 200)
-            {
-                document.getElementsByTagName('h4')[0].innerHTML = "Contact deleted successfully!";
-                tableBody.deleteRow(selectedRow.index);
-            }
-        };
-        xhr.send(JSON.stringify(queryDelete));
-    }
-    catch(err)
-    {
-    }
+    document.getElementsByTagName('h4')[0].innerHTML =
+        selectedRows.length === 1
+            ? "Contact deleted successfully!"
+            : `Successfully deleted ${selectedRows.length} contacts!`;
 }
 
 function addTableRow(contact)
@@ -386,7 +378,7 @@ function addTableRow(contact)
     const row = document.createElement('tr');
 
     row.setAttribute('data-contact-id', id);
-    row.addEventListener('click', setActive);
+    row.addEventListener('click', toggleActive);
     row.innerHTML = `
         <td>${firstName || ''}</td>
         <td>${lastName || ''}</td>
