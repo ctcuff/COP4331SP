@@ -132,7 +132,7 @@
     padding: 10px 15px;
 }
 
-.disabledButton
+button.disabledButton
 {
   background-color:#2e2e2e;
   color: #b3b3b3;
