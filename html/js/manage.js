@@ -10,6 +10,7 @@ const deleteContactModal = document.querySelector('.delete-contact-modal');
 const userId = getCookie('userId');
 const urlBase = 'http://ourcontactmanager.rocks/API';
 const searchBar = document.getElementById("searchBar");
+const tableBody = document.querySelector('tbody');
 
 if (!userId) window.location.href = '/sign-in';
 
@@ -157,8 +158,8 @@ function addContact()
 {
     const firstName = document.getElementById("addFirstNameButton").value.trim();
     const lastName = document.getElementById("addLastNameButton").value.trim();
-    const phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
-    const email = document.getElementById("addEmailButton").value.trim();
+    let phoneNumber = document.getElementById("addPhoneNumberButton").value.trim();
+    let email = document.getElementById("addEmailButton").value.trim();
 
     if (!userId) return;
     if (!firstName || !lastName) return;
@@ -187,6 +188,15 @@ function addContact()
               {
                var jsonObject = JSON.parse( xhr.responseText );
                if(jsonObject.error != "") throw new Error(jsonObject.error);
+
+                addTableRow({
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    id: jsonObject.Contact_ID
+                });
+
                Toast.show("Contact added successfully", "success");
                }
                catch(errCode)
@@ -240,26 +250,18 @@ function searchContact()
             {
                 var jsonObject = JSON.parse( xhr.responseText );
 
-                var table = document.getElementById("tableRow");
-                while (table.rows.length > 1) {
-                    table.deleteRow(1);
-                }
+                tableBody.innerHTML = '';
 
                 for( var i=0; i<jsonObject.contacts.length; i++ )
                 {
-                    contactList += `<tr data-contact-id=${jsonObject.contacts[i].Contact_ID}>`;
-                    contactList += "<td>" + jsonObject.contacts[i].First_Name + "</td>";
-                    contactList += "<td>" + jsonObject.contacts[i].Last_Name + "</td>";
-                    contactList += "<td>" + jsonObject.contacts[i].Phone + "</td>";
-                    contactList += "<td>" + jsonObject.contacts[i].Email + "</td>";
-                    contactList += "</tr>";
-                }
-                document.getElementById("tableRow").innerHTML += contactList;
-
-                var elements= document.querySelectorAll('tr:not(tr.header)');
-                for(var i=0; i<elements.length;i++)
-                {
-                    (elements)[i].addEventListener("click", setActive);
+                    var contact = jsonObject.contacts[i];
+                    addTableRow({
+                        firstName: contact.First_Name,
+                        lastName: contact.Last_Name,
+                        phoneNumber: contact.Phone,
+                        email: contact.Email,
+                        id: contact.Contact_ID
+                    });
                 }
             }
         };
@@ -368,7 +370,7 @@ function deleteContact()
             if (this.readyState == 4 && this.status == 200)
             {
                 document.getElementsByTagName('h4')[0].innerHTML = "Contact deleted successfully!";
-                document.getElementById('tableRow').deleteRow(selectedRow.rowIndex);
+                tableBody.deleteRow(selectedRow.index);
             }
         };
         xhr.send(JSON.stringify(queryDelete));
@@ -376,6 +378,22 @@ function deleteContact()
     catch(err)
     {
     }
+}
+
+function addTableRow(contact)
+{
+    const { firstName, lastName, phoneNumber, email, id } = contact;
+    const row = document.createElement('tr');
+
+    row.setAttribute('data-contact-id', id);
+    row.addEventListener('click', setActive);
+    row.innerHTML = `
+        <td>${firstName || ''}</td>
+        <td>${lastName || ''}</td>
+        <td>${phoneNumber || ''}</td>
+        <td>${email || ''}</td>
+    `;
+    tableBody.appendChild(row);
 }
 
 function onEnterPress(event) {

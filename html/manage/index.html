@@ -22,15 +22,18 @@
                 </div>
                 <div style="margin-bottom: 65px">
                     <table id="tableRow" class="table" style="position: sticky">
-                        <tr class="header">
-                            <th style="width: 25%;">First Name</th>
-                            <th style="width: 25%;">Last Name</th>
-                            <th style="width: 25%;">Phone</th>
-                            <th style="width: 25%;">Email</th>
-                        </tr>
+                        <thead class="header">
+                            <tr>
+                                <th style="width: 25%;">First Name</th>
+                                <th style="width: 25%;">Last Name</th>
+                                <th style="width: 25%;">Phone</th>
+                                <th style="width: 25%;">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
                     </table>
                 </div>
-                <div class="btn-wrapper" style="position: fixed; bottom: 25px">
+                <div class="btn-wrapper">
                     <button data-btn-target="#buttonAdd" class="btn-crud btn-crud--add">Add</button>
                     <button data-btn-target="#buttonUpdate" class="btn-crud btn-crud--update">Update</button>
                     <button data-btn-target="#buttonDelete" class="btn-crud btn-crud--delete">Delete</button>
